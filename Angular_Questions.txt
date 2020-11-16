@@ -1,0 +1,197 @@
+1. What is Jasmine/Karma?
+
+karma and jasmine are 2 open soure framework used internally for angular testing.
+
+Jasmine helps to write unit test.beforeEach,describe,it these are jasmine syntax.
+Jasmine is a framework which helps us to write unit test cases while karma is a runner. which runs jasmine unit test and shows the result.
+
+2. What is Observable?
+
+Observables and Reactive Extensions:
+
+Reactive Extensions represent data sequence as an observable sequence is commonly as called observable.Observable helps us manage an asynchronous data.Observable treat events as a collection.An method of our code can subscribe to an observable to receive asyschronous notifications as new data arrives. the method then can react as data is pushed to it.The method is notified when there's no more data or while an error occurs.An observable are used within angular itself.
+
+Operators are method on observables that compose new observables.Each operators transform the source observable in some way.Operators in observable process each value as it is emitted.Some example of operators: map,filter,take merge.
+We compose observable operators with pipe method.So it sometimes referred to as pippeable operators.
+
+
+We import operators from rxjs/operators 
+
+import {Observable , range} from 'rxjs'
+import {map , filter} from 'rxjs/operators'
+
+import { Observable, range } from 'rxjs' ========= here rxjs import 2 important packages: Observable and range. Obseravble and observable creation method such as range can be found in rxjs package.
+
+
+Promise:
+Provides a single future value .It's not lazy.Promise is on it's way being resolved.it can'r be cancelled. it can only be resolved or rejected but only once.
+
+Obseravble: Emits multiple asunchronous value over time.It's lazy by default.Observable will not emit values until it's subscribed.An observable can be cancelled by unsubscribing.obseravle support map,filter, reduce etc. operators.
+
+
+3. What is Pipe in angular?
+
+Use pipes to transform strings, currency amounts, dates, and other data for display. CurrencyPipe
+<p>The hero's birthday is {{ birthday | date:"MM/dd/yy" }} </p>
+
+4. what is observable pipe,map,tap:
+
+A Pipeable Operator is a function that takes an Observable as its input and returns another Observable.
+
+Tap: Tap is used for notification.It does to the input value it does not change the original value.
+
+const source = of(1, 2, 3, 4, 5);
+
+// here we are manipulating the input value but the output value of the observable still the same 
+const example = source.pipe(
+  tap(val => val + 100),
+);
+
+const subscribe = example.subscribe(val => console.log(val));
+// output: 1, 2, 3, 4, 5
+Map:if we made any manipulation of the input values of the observable using the map operator it will change the output values
+
+const example = source.pipe(
+  map(val => val + 100)
+);
+
+const subscribe = example.subscribe(val => console.log(val));
+// output: 101, 102, 103, 104, 105
+
+5. How do we do dependency injection in angular?
+Using constructor.Every class has a constructor which is executed when it's instance of the class is created.If there's no explicit constructor defined for the class and implicit constructor is used.For dependency such as an instance of a service we need an explict constructor.
+
+6. Input/Output Event Emitters:
+
+we can use re-usable component using input/output emitter.
+A common pattern in Angular is sharing data between a parent component and one or more child components. You can implement this pattern by using the @Input() and @Output() directives.
+
+7. Angular Cli:
+
+The Angular CLI is a command-line interface tool that you use to initialize, develop, scaffold, and maintain Angular applications directly from a command shell.
+
+You need to install cli first before use.
+
+npm install -g @angular/cli
+
+ng new hello-world  =====> Generates our application.
+cd hello-world ======>navigate to the application.
+code .  =======>open this code in vscode.
+ng new hello-world --prefix hw =======> if you want to add prefix to your application.
+ng new --help
+ng start =====> serves ng serve commnad
+npm start prod======== for production
+ng g --help
+ng test ====> to run unit test
+ng e2e =====> to run e2e test
+ng build =====> build application
+ng build --prod =====>It minify/uglify our code and perform tree shaking.Tree shaking means it removes any unused pieces.it created some minfied files which are deployed in the webserver.It will be downloaded by the user when they access our application.AOT: convert out typescript code into javascript code as part of the build process.this provides faster rendering in the browser and prevents the need to include the complier in the bundle. (main.hascode.js)
+ng build --help
+
+7. bootstrap array:
+
+Every application must bootstarp atleast one compoenent, the root application component.The bootstarp array should only be used in root application module,appModule.
+
+8. provider:
+A provider is an instruction to the Dependency Injection system on how to obtain a value for a dependency.
+
+/app/user.service.ts
+import { Injectable } from '@angular/core';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class UserService {
+}
+
+The service itself is a class that the CLI generated and that's decorated with @Injectable(). By default, this decorator has a providedIn property, which creates a provider for the service. In this case, providedIn: 'root' specifies that Angular should provide the service in the root injector.Service should be provided for the root module. 
+
+/app/user.service.ts
+It's also possible to specify that a service should be provided in a particular @NgModule. 
+
+import { Injectable } from '@angular/core';
+import { UserModule } from './user.module';
+
+@Injectable({
+  providedIn: UserModule,
+})
+export class UserService {
+}
+
+8. How to debug in anagular:
+
+Debugging using following methods:
+
+a.ng.getOwningComponent($0)
+b.ng.ApplyChanges(ng.getOwningComponent($0))
+c.ng.getCompoents($0)
+d.ng.getDirectives($0)
+e.ng.getContext($0)
+
+
+9. Lazy loading:
+
+npm start command excutes the angular cli ng serve -o command.We can see cli package out application into chunk and complie it.
+main.js : contains our code minified and uglified.
+polyfills.js: Contains polyfill scripts needed to ensure our application runs in all modern browsers.
+runtime.js : small file that is needed to load the other file.
+styles.js : contains styles.
+Vendor.js : any libraries imported into our application. including angular libraries and angular complier.
+
+To open it in prodction mode: ng serve -o --prod
+
+Here we can see only 4files(runtime.####,main.#####,polyfilss.#### and styles.####).They are very small in size.These're the files we deploy to our webserver.They'll be downloaded by the users when they'll access our application.
+
+Go to Network tab in Devtool and check the size of each bundle. The biggest file is main.js.If we can reduce the size we can reduce application start up time.That's the purpose of lazy loading.
+
+Purpose: We can delay downloading feature untill they're requested by the user.This can speedup the initial start up time of the application.Lazy loading is specially used for a feature which is not often accessed or accesded by a specific user.
+
+Disadvantage: Depending on users download speed it may cause an noticeable delay when navigating to the first product route.
+It can be slow depends on the internet speed of the user.
+
+10. Preloading(Eager Lazy Loading):
+
+Preload our feature module asynchronously behind the scene after the display of our first page. This is not useful when the module is not often accessed or accessed by a specific user for example admin module.
+
+Asynchronously preloading the bundle.
+
+3 types:
+
+a. No preloading (on demand) //canLoad: [AuthGuard]
+b. preload all //preloadingStrategy: PreloadAllModules
+c. custom preload strategy. This allows us to preload some of our lazy loaded modules not all.We may want to preload the most commonly used modules and lazy load our admin features or less commonly used modules.
+
+11. Guard Processing:
+
+Routers 1st executes the canDeactivate guard for the current route.CanLoad guard is checked before module is laoded. then CanActivateChild and then CanActivate guard.
+When all the guards are checked then resolve is executed.
+
+canDeactivate->canLoad->CanActivateChild->CanActivate.
+If any guards return false all the pending guards are cancelled and the requested navigation is cancelled.
+
+canActivateChild guard limit access to child guard.
+
+12. Secondary Outlet:
+
+In template/html:
+option 1:
+<a [routerLink]="[{outlets: { popup: ['messages']}}]">Messages</a>
+         
+In compoent class:
+option 2:
+this.router.navigate([{outlets: { popup: ['messages']}}]);
+option 3:
+this.router.navigateByUrl('/products/5/edit/(popup:summary/5)');
+
+13. Clearing Secondary outlet:
+
+In template/html:
+option 1:
+<a [routerLink]="[{outlets: { popup: null}}]">Messages</a>
+       
+In compoent class:
+option 2:
+this.router.navigate([{outlets: { popup: null}}]);
+option 3:
+this.router.navigateByUrl('/login');
+
